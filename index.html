@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101712">
+  <meta name="description" content="Craft Station 是一款简洁、轻盈的 Minecraft Java 版启动器。管理游戏版本、实例与常用资源，开启你的下一段冒险。">
+  <title>Craft Station — Minecraft 启动器</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17231c;
+      --muted: #67736b;
+      --green: #258451;
+      --green-dark: #174c32;
+      --mint: #dbece1;
+      --paper: #f5f8f5;
+      --line: rgba(24, 55, 39, .12);
+      --shadow: 0 22px 70px rgba(13, 31, 21, .12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: Inter, "Segoe UI", "Microsoft YaHei UI", sans-serif; }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+    .hero {
+      min-height: 760px; height: min(900px, 100svh); position: relative; overflow: hidden; color: #f5faf6;
+      background: #070908 url("assets/hero-wallpaper.jpg") center 42% / cover no-repeat;
+      isolation: isolate;
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(5,9,7,.94) 0%, rgba(5,9,7,.78) 36%, rgba(5,9,7,.18) 78%), linear-gradient(0deg, rgba(5,9,7,.55), transparent 48%); }
+    .hero::after { content: ""; position: absolute; inset: auto 0 0; height: 120px; background: linear-gradient(transparent, var(--paper)); pointer-events: none; }
+    .nav { height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 700; letter-spacing: -.02em; }
+    .brand svg { width: 35px; height: 35px; }
+    .nav-links { display: flex; align-items: center; gap: 30px; font-size: 14px; color: rgba(247,252,248,.8); }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { padding: 11px 18px; border: 1px solid rgba(255,255,255,.4); border-radius: 999px; background: rgba(240,250,244,.14); backdrop-filter: blur(18px); font-weight: 650; }
+    .hero-content { padding-top: clamp(100px, 18vh, 190px); padding-bottom: 150px; max-width: 650px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 9px; padding: 8px 12px; border: 1px solid rgba(219,244,228,.25); border-radius: 999px; background: rgba(220,244,229,.1); color: #d4eadb; font-size: 12px; letter-spacing: .06em; backdrop-filter: blur(16px); }
+    .eyebrow i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #79d99e; box-shadow: 0 0 15px #79d99e; }
+    h1 { margin: 24px 0 18px; max-width: 650px; font-size: clamp(44px, 7vw, 78px); line-height: 1.07; letter-spacing: -.055em; font-weight: 740; }
+    h1 span { color: #a9e0ba; }
+    .hero-copy { max-width: 490px; color: rgba(239,247,241,.76); font-size: clamp(16px, 2vw, 19px); line-height: 1.85; }
+    .actions { display: flex; align-items: center; gap: 13px; flex-wrap: wrap; margin-top: 32px; }
+    .button { min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 0 21px; border-radius: 13px; font-weight: 700; transition: transform .18s ease, box-shadow .18s ease, background .18s ease; }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { color: #fff; background: #2b925b; box-shadow: 0 12px 30px rgba(20,115,62,.32); }
+    .button-primary:hover { background: #35a76a; box-shadow: 0 16px 36px rgba(20,115,62,.42); }
+    .button-glass { color: #f5faf6; border: 1px solid rgba(255,255,255,.25); background: rgba(245,250,246,.1); backdrop-filter: blur(16px); }
+    .hero-meta { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 30px; color: rgba(239,247,241,.62); font-size: 12px; }
+    .hero-meta span { display: inline-flex; align-items: center; gap: 7px; }
+    .hero-meta b { color: #dceee1; font-weight: 600; }
+    .scroll-note { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); z-index: 1; color: rgba(239,247,241,.65); font-size: 11px; letter-spacing: .14em; }
+    section { padding: 104px 0; }
+    .section-kicker { color: var(--green); font-size: 12px; font-weight: 750; text-transform: uppercase; letter-spacing: .14em; }
+    h2 { margin: 13px 0 12px; font-size: clamp(32px, 4vw, 48px); line-height: 1.16; letter-spacing: -.045em; }
+    .section-intro { max-width: 580px; color: var(--muted); font-size: 16px; line-height: 1.8; }
+    .features { background: var(--paper); }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 44px; }
+    .feature { min-height: 230px; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: rgba(255,255,255,.74); box-shadow: 0 8px 30px rgba(20,48,32,.035); }
+    .feature-icon { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 14px; color: var(--green-dark); background: #e4f1e8; }
+    .feature-icon svg { width: 22px; height: 22px; }
+    .feature h3 { margin: 21px 0 8px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .showcase { color: #edf7f0; background: #14231a; overflow: hidden; }
+    .showcase .section-kicker { color: #9ed6af; }
+    .showcase .section-intro { color: rgba(233,244,236,.65); }
+    .showcase-row { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 70px; }
+    .showcase-art { position: relative; min-height: 400px; border: 1px solid rgba(227,245,233,.15); border-radius: 26px; overflow: hidden; background: url("assets/hero-wallpaper.jpg") 61% 45% / cover; box-shadow: 0 30px 80px rgba(0,0,0,.28); }
+    .showcase-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(20,35,26,.04), rgba(10,17,12,.48)); }
+    .art-label { position: absolute; z-index: 1; left: 20px; right: 20px; bottom: 20px; padding: 17px 19px; border: 1px solid rgba(255,255,255,.23); border-radius: 16px; color: white; background: rgba(244,250,246,.17); backdrop-filter: blur(22px); }
+    .art-label strong { display: block; font-size: 14px; }
+    .art-label span { display: block; margin-top: 4px; color: rgba(255,255,255,.7); font-size: 12px; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 42px; }
+    .step { padding: 24px; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+    .step-num { color: #86b998; font-size: 12px; font-weight: 800; letter-spacing: .12em; }
+    .step h3 { margin: 14px 0 8px; font-size: 17px; }
+    .step p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .download { padding: 0 0 104px; }
+    .download-panel { position: relative; padding: 52px; display: flex; align-items: center; justify-content: space-between; gap: 30px; color: #eff8f1; border-radius: 26px; overflow: hidden; background: linear-gradient(115deg, #1b4d32, #287b4c); box-shadow: var(--shadow); }
+    .download-panel::after { content: ""; position: absolute; width: 340px; height: 340px; right: 14%; top: -220px; border-radius: 50%; background: rgba(190,245,207,.17); filter: blur(3px); }
+    .download-panel h2 { margin-top: 0; font-size: clamp(28px, 3vw, 40px); }
+    .download-panel p { margin: 0; color: rgba(239,248,241,.7); font-size: 14px; }
+    .download-panel .button { position: relative; z-index: 1; flex: 0 0 auto; color: #164529; background: #f3faf5; }
+    .faq { padding-top: 0; }
+    .faq-list { max-width: 780px; margin-top: 34px; border-top: 1px solid var(--line); }
+    details { border-bottom: 1px solid var(--line); padding: 19px 0; }
+    summary { cursor: pointer; font-weight: 680; list-style: none; display: flex; justify-content: space-between; gap: 18px; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; color: var(--green); font-size: 20px; line-height: 1; }
+    details[open] summary::after { content: "−"; }
+    details p { margin: 12px 32px 0 0; color: var(--muted); font-size: 14px; line-height: 1.8; }
+    footer { padding: 26px 0 34px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+    .footer-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .footer-brand { color: var(--ink); }
+    .small-note { max-width: 670px; text-align: right; line-height: 1.7; }
+    @media (max-width: 900px) {
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .showcase-row { gap: 35px; }
+      .showcase-art { min-height: 340px; }
+      .download-panel { padding: 38px; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 32px, 560px); }
+      .hero { min-height: 720px; height: auto; background-position: 62% center; }
+      .hero::before { background: linear-gradient(90deg, rgba(5,9,7,.88), rgba(5,9,7,.47)), linear-gradient(0deg, rgba(5,9,7,.48), transparent 65%); }
+      .nav { height: 70px; }
+      .nav-links { gap: 14px; font-size: 12px; }
+      .nav-links a:not(.nav-cta) { display: none; }
+      .nav-cta { padding: 9px 13px; }
+      .hero-content { padding-top: 110px; padding-bottom: 125px; }
+      h1 { font-size: clamp(43px, 13vw, 62px); }
+      section { padding: 76px 0; }
+      .feature-grid { grid-template-columns: 1fr; margin-top: 30px; }
+      .feature { min-height: auto; }
+      .showcase-row { grid-template-columns: 1fr; }
+      .showcase-art { min-height: 310px; order: 2; }
+      .steps { grid-template-columns: 1fr; margin-top: 28px; }
+      .download { padding-bottom: 76px; }
+      .download-panel { padding: 30px 24px; align-items: flex-start; flex-direction: column; }
+      .download-panel .button { width: 100%; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+      .small-note { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <header class="hero" id="top">
+    <nav class="nav wrap" aria-label="主导航">
+      <a class="brand" href="#top" aria-label="Craft Station 首页">
+        <svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 42 13.5v21L24 45 6 34.5v-21L24 3Z" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/><path d="m6.5 13.7 17.5 10 17.5-10M24 24v20" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>
+        <span>Craft Station</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">功能</a>
+        <a href="#guide">快速上手</a>
+        <a href="#faq">常见问题</a>
+        <a class="nav-cta" href="downloads/Craft-Station-Setup.exe" download>下载启动器</a>
+      </div>
+    </nav>
+    <div class="hero-content wrap">
+      <div class="eyebrow"><i></i> MINECRAFT JAVA LAUNCHER</div>
+      <h1>把下一段冒险，<br><span>交给 Craft Station.</span></h1>
+      <p class="hero-copy">版本、实例与常用资源，一处整理。打开启动器，接着你的 Minecraft 旅程。</p>
+      <div class="actions">
+        <a class="button button-primary" href="downloads/Craft-Station-Setup.exe" download>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v4h14v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          下载 Windows 版
+        </a>
+        <a class="button button-glass" href="#features">了解功能 <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-meta"><span><b>Windows 10 / 11</b></span><span>免费使用</span><span>Minecraft Java 版</span></div>
+    </div>
+    <div class="scroll-note">SCROLL TO EXPLORE&nbsp; ↓</div>
+  </header>
+
+  <main>
+    <section class="features" id="features">
+      <div class="wrap">
+        <div class="section-kicker">Made for your next world</div>
+        <h2>开始游戏前的事，<br>都简单一点。</h2>
+        <p class="section-intro">从安装版本到整理常用文件，Craft Station 把常用操作放在顺手的位置，让你更快进入游戏。</p>
+        <div class="feature-grid">
+          <article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5ZM4 17a2.5 2.5 0 0 1 2.5-2.5H20" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></div><h3>安装游戏版本</h3><p>浏览 Minecraft Java 版版本清单，按需安装游戏版本。</p></article>
+          <article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5 12 3l8 4.5v9L12 21l-8-4.5v-9Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m4.5 7.7 7.5 4.4 7.5-4.4M12 12v8.5" stroke="currentColor" stroke-width="1.8"/></svg></div><h3>管理游戏实例</h3><p>查看本机已安装实例，快速切换版本并继续游玩。</p></article>
+          <article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>常用资源入口</h3><p>快速打开模组、资源包、光影与截图目录。</p></article>
+          <article class="feature"><div class="feature-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1m0-12.8-2.1 2.1m-8.6 8.6-2.1 2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg></div><h3>实用小工具</h3><p>内存整理、临时文件清理、文件夹管理与自定义下载。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="showcase">
+      <div class="wrap showcase-row">
+        <div>
+          <div class="section-kicker">Your launcher, your flow</div>
+          <h2>安静、清晰，<br>为游戏留出空间。</h2>
+          <p class="section-intro">以简洁的启动体验为核心，把实例和常用入口放在首页。选择版本、启动游戏，过程直观不绕弯。</p>
+        </div>
+        <div class="showcase-art" role="img" aria-label="Craft Station 启动画面壁纸">
+          <div class="art-label"><strong>Craft Station</strong><span>整理好装备，进入下一段旅程。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guide">
+      <div class="wrap">
+        <div class="section-kicker">Get started</div>
+        <h2>三步，进入世界。</h2>
+        <div class="steps">
+          <article class="step"><div class="step-num">01 / DOWNLOAD</div><h3>下载并安装</h3><p>下载 Windows 安装包，选择安装目录，按提示完成安装。</p></article>
+          <article class="step"><div class="step-num">02 / INSTALL</div><h3>创建游戏实例</h3><p>打开“游戏”页面，点击“新建实例”，选择想玩的 Minecraft 版本。</p></article>
+          <article class="step"><div class="step-num">03 / PLAY</div><h3>准备好就启动</h3><p>选择已安装实例，设置游戏昵称，然后点击“启动游戏”。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="download">
+      <div class="wrap download-panel">
+        <div><h2>下一段旅程，<br>现在开始。</h2><p>Craft Station · Windows 安装包</p></div>
+        <a class="button" href="downloads/Craft-Station-Setup.exe" download>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v4h14v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          下载 Craft Station
+        </a>
+      </div>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="wrap">
+        <div class="section-kicker">FAQ</div>
+        <h2>常见问题</h2>
+        <div class="faq-list">
+          <details><summary>启动器支持哪些系统？</summary><p>当前安装包面向 Windows 10 和 Windows 11。启动器需要 .NET Framework 4.6.2 或更高版本。</p></details>
+          <details><summary>下载游戏版本会从哪里获取？</summary><p>版本清单和游戏文件由启动器从 Minecraft 官方资源地址获取。下载速度会受网络环境影响。</p></details>
+          <details><summary>可以用微软正版账号登录吗？</summary><p>当前开源构建没有配置 Microsoft OAuth Client ID，因此微软正版账号登录尚未启用。需要在源码中配置自己的 Microsoft Client ID 后重新构建。</p></details>
+          <details><summary>Essential 好友联机怎么用？</summary><p>启动器内的一键安装入口目前支持 Minecraft 1.21.1 Fabric。Essential 的好友联机功能需要正版 Microsoft Minecraft 账号；当前构建的微软登录尚未配置。</p></details>
+          <details><summary>如何卸载？会删除我的存档吗？</summary><p>可在 Windows“已安装的应用”中卸载 Craft Station。卸载程序只移除启动器文件，不删除 Minecraft 游戏目录、实例或存档。</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-row">
+      <a class="brand footer-brand" href="#top"><svg viewBox="0 0 48 48" fill="none" aria-hidden="true"><path d="M24 3 42 13.5v21L24 45 6 34.5v-21L24 3Z" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round"/><path d="m6.5 13.7 17.5 10 17.5-10M24 24v20" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg><span>Craft Station</span></a>
+      <div class="small-note">Craft Station 是独立的 Minecraft 启动器项目，与 Mojang 或 Microsoft 无隶属关系。Minecraft 为 Mojang Studios 的商标。</div>
+    </div>
+  </footer>
+</body>
+</html>
+
